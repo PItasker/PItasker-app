@@ -39,7 +39,7 @@ function App() {
       <img src="logo.png" alt="TaskerPI Logo" style={{ width: '90px', marginBottom: '1.5em' }} />
       <h1 style={{ fontSize: '3em', color: '#B97FFF', marginBottom: '0.3em' }}>Welcome to TaskerPI</h1>
       <p style={{ fontSize: '1.1em', maxWidth: '520px', lineHeight: '1.6', marginBottom: '2em' }}>
-        A clean and minimal Pi Network prototype built for clarity, elegance, and focused testing in the Web3 ecosystem.
+        A Pi Network App prototype focused on testing the Web3 ecosystem.
       </p>
       <button onClick={handleLogin} style={{
         backgroundColor: '#FFA300',
