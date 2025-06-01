@@ -10,7 +10,7 @@ function App() {
 
   const handleLogin = () => {
     if (window.Pi) {
-      window.Pi.authenticate(['username'], (result) => {
+window.Pi.authenticate(['username', 'payments'], (result) => {
         console.log("Authenticated:", result);
         alert(`Welcome, ${result.user.username}!`);
       }, (error) => {
