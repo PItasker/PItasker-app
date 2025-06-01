@@ -99,7 +99,6 @@ function App() {
         💸 Donate 0.001 Pi
       </button>
 
-      
     </div>
   );
 }
