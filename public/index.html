@@ -1,16 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Hello from Pi App" />
-    <title>Hello Pi App</title>
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>TaskerPI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      background-color: #2D014D;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3em;
+      color: #B97FFF;
+      margin-bottom: 0.3em;
+    }
+    p {
+      font-size: 1.1em;
+      max-width: 520px;
+      line-height: 1.6;
+      margin-bottom: 2em;
+    }
+    button {
+      background-color: #FFA300;
+      color: #2D014D;
+      border: none;
+      padding: 0.75em 2em;
+      font-size: 1em;
+      font-weight: 400;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #ffb733;
+    }
+    img {
+      width: 90px;
+      margin-bottom: 1.5em;
+    }
+  </style>
+</head>
+<body>
+  <img src="logo.png" alt="TaskerPI Logo">
+  <h1>Welcome to TaskerPI</h1>
+  <p>A clean and minimal Pi Network prototype built for clarity, elegance, and focused testing in the Web3 ecosystem.</p>
+  <button onclick="alert('Login will be handled via Pi SDK')">Login with Pi</button>
+</body>
 </html>
