@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-//import './App.css'; // Optional, in case styling is needed later
 
 function App() {
   useEffect(() => {
@@ -22,6 +21,36 @@ function App() {
       alert("Pi SDK not loaded.");
     }
   };
+
+  const handlePayment = () => {
+    if (window.Pi) {
+      window.Pi.createPayment({
+        amount: 0.001,
+        memo: "Test payment to TaskerPI",
+        metadata: { type: "donation" },
+        to: "app_wallet", // questo campo sarà ignorato in sandbox
+      }, {
+        onReadyForServerApproval: (paymentId) => {
+          console.log("Ready for server approval:", paymentId);
+        },
+        onReadyForServerCompletion: (paymentId, txid) => {
+          console.log("Ready for server completion:", paymentId, txid);
+          alert(`✅ Payment approved!\nPaymentID: ${paymentId}`);
+        },
+        onCancel: () => {
+          console.log("❌ Payment cancelled by user");
+          alert("Payment cancelled.");
+        },
+        onError: (error) => {
+          console.error("❌ Payment error:", error);
+          alert("Payment error occurred.");
+        }
+      });
+    } else {
+      alert("Pi SDK not available.");
+    }
+  };
+
 
   return (
     <div style={{
@@ -54,6 +83,23 @@ function App() {
       }}>
         Login with Pi
       </button>
+
+      <button onClick={handlePayment} style={{
+        backgroundColor: '#2D014D',
+        color: '#FFA300',
+        border: '2px solid #FFA300',
+        padding: '0.75em 2em',
+        fontSize: '1em',
+        fontWeight: 400,
+        borderRadius: '8px',
+        marginTop: '1em',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease'
+      }}>
+        💸 Donate 0.001 Pi
+      </button>
+
+      
     </div>
   );
 }
