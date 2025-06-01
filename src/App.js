@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './App.css'; // Optional, in case styling is needed later
+//import './App.css'; // Optional, in case styling is needed later
 
 function App() {
   useEffect(() => {
