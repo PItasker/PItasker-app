@@ -12,23 +12,27 @@ function App() {
     }
   }, []);
 
-  const handleLogin = () => {
-    console.log("Login clicked");
-    if (window.Pi) {
-      console.log("Attempting login...");
-      window.Pi.authenticate(['username', 'payments'], (result) => {
-        console.log("Authenticated:", result);
-        alert(`Welcome, ${result.user.username}!`);
-        setAuthenticatedUser(result.user); // <- qui salviamo il login!
-        navigate('/donate');
-      }, (error) => {
-        console.error("Authentication failed:", error);
-        alert("Authentication failed. Check the console.");
-      });
-    } else {
-      alert("Pi SDK not available.");
-    }
-  };
+  const handleLogin = async () => {
+  console.log("Login clicked");
+  if (!window.Pi) {
+    alert("Pi SDK not available.");
+    return;
+  }
+
+  console.log("Attempting login...");
+  try {
+    const result = await new Promise((resolve, reject) => {
+      window.Pi.authenticate(['username', 'payments'], resolve, reject);
+    });
+    console.log("Authenticated:", result);
+    alert(`Welcome, ${result.user.username}!`);
+    navigate('/donate');
+  } catch (error) {
+    console.error("Authentication failed:", error);
+    alert("Authentication failed. Check the console.");
+  }
+};
+
 
   return (
     <div style={{
