@@ -12,19 +12,10 @@ function App() {
   }, []);
 
   const handleLogin = () => {
-    if (window.Pi) {
-      window.Pi.authenticate(['username', 'payments'], (result) => {
-        console.log("Authenticated:", result);
-        alert(`Welcome, ${result.user.username}!`);
-        navigate('/donate');
-      }, (error) => {
-        console.error("Authentication failed:", error);
-        alert("Authentication failed. Check the console.");
-      });
-    } else {
-      alert("Pi SDK not available.");
-    }
-  };
+  alert("FORZATO: vado su /donate senza login");
+  navigate('/donate');
+};
+
 
   return (
     <div style={{
