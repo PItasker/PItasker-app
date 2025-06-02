@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 function App() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     if (window.Pi) {
@@ -12,16 +12,18 @@ function App() {
   }, []);
 
   const handleLogin = () => {
+    console.log("Attempting login...");
     if (window.Pi) {
+      console.log("Pi SDK found. Authenticating...");
       window.Pi.authenticate(['username', 'payments'], (result) => {
         console.log("Authenticated:", result);
         alert(`Welcome, ${result.user.username}!`);
-        navigate('/donate');
       }, (error) => {
         console.error("Authentication failed:", error);
         alert("Authentication failed. Check the console.");
       });
     } else {
+      console.error("Pi SDK not available.");
       alert("Pi SDK not available.");
     }
   };
@@ -44,7 +46,7 @@ function App() {
       <p style={{ fontSize: '1.1em', maxWidth: '520px', lineHeight: '1.6', marginBottom: '2em' }}>
         A Pi Network App prototype focused on testing the Web3 ecosystem.
       </p>
-      <button onClick={handleLogin} style={{
+      <button onClick={() => { console.log("Login clicked"); handleLogin(); }} style={{
         backgroundColor: '#FFA300',
         color: '#2D014D',
         border: 'none',
