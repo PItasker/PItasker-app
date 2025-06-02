@@ -11,6 +11,7 @@ function App() {
     }
   }, []);
 
+  
   const handleLogin = () => {
   alert("FORZATO: vado su /donate senza login");
   navigate('/donate');
