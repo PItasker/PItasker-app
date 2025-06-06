@@ -11,28 +11,52 @@ function App() {
     }
   }, []);
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     console.log("Login clicked");
-    if (!window.Pi) {
-      alert("Pi SDK not available.");
-      return;
-    }
-
-    console.log("Attempting login...");
-    try {
-      const result = await new Promise((resolve, reject) => {
-        window.Pi.authenticate(['username', 'payments'], resolve, reject);
+    if (window.Pi) {
+      console.log("Attempting login...");
+      window.Pi.authenticate(['username', 'payments'], (result) => {
+        console.log("Authenticated:", result);
+        alert(`Welcome, ${result.user.username}!`);
+      }, (error) => {
+        console.error("Authentication failed:", error);
+        alert("Authentication failed. Check the console.");
       });
-      console.log("Authenticated:", result);
-      alert(`Welcome, ${result.user.username}!`);
-      navigate('/donate');
-    } catch (error) {
-      console.error("Authentication failed:", error);
-      alert("Authentication failed. Check the console.");
+    } else {
+      alert("Pi SDK not available.");
     }
   };
 
-  const skipToDonate = () => {
+  const handleInlineDonate = () => {
+    if (window.Pi) {
+      window.Pi.createPayment({
+        amount: 0.001,
+        memo: "Inline test payment from TaskerPI",
+        metadata: { type: "inline-donation" },
+        to: "app_wallet",
+      }, {
+        onReadyForServerApproval: (paymentId) => {
+          console.log("Ready for server approval:", paymentId);
+        },
+        onReadyForServerCompletion: (paymentId, txid) => {
+          console.log("Ready for server completion:", paymentId, txid);
+          alert(`✅ Payment approved!\nPaymentID: ${paymentId}`);
+        },
+        onCancel: () => {
+          console.log("❌ Payment cancelled by user");
+          alert("Payment cancelled.");
+        },
+        onError: (error) => {
+          console.error("❌ Payment error:", error);
+          alert("Payment error occurred.");
+        }
+      });
+    } else {
+      alert("Pi SDK not available.");
+    }
+  };
+
+  const handleNavigate = () => {
     console.log("Bypassing login, going to donate page...");
     navigate('/donate');
   };
@@ -55,36 +79,26 @@ function App() {
       <p style={{ fontSize: '1.1em', maxWidth: '520px', lineHeight: '1.6', marginBottom: '2em' }}>
         A Pi Network App prototype focused on testing the Web3 ecosystem.
       </p>
-      
-      <button onClick={handleLogin} style={{
-        backgroundColor: '#FFA300',
-        color: '#2D014D',
-        border: 'none',
-        padding: '0.75em 2em',
-        fontSize: '1em',
-        fontWeight: 400,
-        borderRadius: '8px',
-        cursor: 'pointer',
-        transition: 'background 0.3s ease',
-        marginBottom: '1em'
-      }}>
-        Login with Pi
-      </button>
 
-      <button onClick={skipToDonate} style={{
-        backgroundColor: '#ffffff20',
-        color: '#FFFFFF',
-        border: '1px solid #FFA300',
-        padding: '0.6em 1.5em',
-        fontSize: '0.95em',
-        borderRadius: '6px',
-        cursor: 'pointer',
-        transition: 'border 0.3s ease'
-      }}>
-        👉 Go to Donate (debug bypass)
-      </button>
+      <button onClick={handleLogin} style={buttonStyle}>Login with Pi</button>
+      <div style={{ height: '1em' }} />
+      <button onClick={handleNavigate} style={buttonStyle}>Go to Donate page</button>
+      <div style={{ height: '1em' }} />
+      <button onClick={handleInlineDonate} style={buttonStyle}>Donate 0.001 Pi (inline)</button>
     </div>
   );
 }
+
+const buttonStyle = {
+  backgroundColor: '#FFA300',
+  color: '#2D014D',
+  border: 'none',
+  padding: '0.75em 2em',
+  fontSize: '1em',
+  fontWeight: 400,
+  borderRadius: '8px',
+  cursor: 'pointer',
+  transition: 'background 0.3s ease'
+};
 
 export default App;
