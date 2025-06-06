@@ -1,34 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function App() {
   const navigate = useNavigate();
+  const [sdkReady, setSdkReady] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (window.Pi) {
       window.Pi.init({ version: "2.0", sandbox: true });
       console.log("Pi SDK initialized in sandbox mode.");
+      setSdkReady(true);
     }
   }, []);
 
   const handleLogin = () => {
-    console.log("Login clicked");
-    if (window.Pi) {
+    if (!sdkReady || loading) return;
+    setLoading(true);
+    console.log("Login clicked – waiting 500ms to ensure iframe readiness...");
+    setTimeout(() => {
       console.log("Attempting login...");
       window.Pi.authenticate(['username', 'payments'], (result) => {
         console.log("Authenticated:", result);
         alert(`Welcome, ${result.user.username}!`);
+        setLoading(false);
       }, (error) => {
         console.error("Authentication failed:", error);
         alert("Authentication failed. Check the console.");
+        setLoading(false);
       });
-    } else {
-      alert("Pi SDK not available.");
-    }
+    }, 500);
   };
 
   const handleInlineDonate = () => {
-    if (window.Pi) {
+    if (!sdkReady || loading) return;
+    setLoading(true);
+    console.log("Starting inline donation – waiting 500ms...");
+    setTimeout(() => {
       window.Pi.createPayment({
         amount: 0.001,
         memo: "Inline test payment from TaskerPI",
@@ -36,24 +44,25 @@ function App() {
         to: "app_wallet",
       }, {
         onReadyForServerApproval: (paymentId) => {
-          console.log("Ready for server approval:", paymentId);
+          console.log("✅ Ready for server approval:", paymentId);
         },
         onReadyForServerCompletion: (paymentId, txid) => {
-          console.log("Ready for server completion:", paymentId, txid);
+          console.log("✅ Ready for server completion:", paymentId, txid);
           alert(`✅ Payment approved!\nPaymentID: ${paymentId}`);
+          setLoading(false);
         },
         onCancel: () => {
           console.log("❌ Payment cancelled by user");
           alert("Payment cancelled.");
+          setLoading(false);
         },
         onError: (error) => {
           console.error("❌ Payment error:", error);
           alert("Payment error occurred.");
+          setLoading(false);
         }
       });
-    } else {
-      alert("Pi SDK not available.");
-    }
+    }, 500);
   };
 
   const handleNavigate = () => {
@@ -80,11 +89,17 @@ function App() {
         A Pi Network App prototype focused on testing the Web3 ecosystem.
       </p>
 
-      <button onClick={handleLogin} style={buttonStyle}>Login with Pi</button>
+      <button onClick={handleLogin} disabled={loading} style={buttonStyle}>
+        {loading ? 'Please wait...' : 'Login with Pi'}
+      </button>
       <div style={{ height: '1em' }} />
-      <button onClick={handleNavigate} style={buttonStyle}>Go to Donate page</button>
+      <button onClick={handleNavigate} disabled={loading} style={buttonStyle}>
+        Go to Donate page
+      </button>
       <div style={{ height: '1em' }} />
-      <button onClick={handleInlineDonate} style={buttonStyle}>Donate 0.001 Pi (inline)</button>
+      <button onClick={handleInlineDonate} disabled={loading} style={buttonStyle}>
+        Donate 0.001 Pi (inline)
+      </button>
     </div>
   );
 }
